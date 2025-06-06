@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Admin Summary Charts</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f8f9fc;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h2 {
+            color: #4e73df;
+            margin-top: 40px;
+            margin-bottom: 20px;
+        }
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(78, 115, 223, 0.15);
+            width: 400px;
+            margin-bottom: 40px;
+        }
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="chart-container">
+        <h2>No. of Users</h2>
+        <canvas id="usersBarChart" width="400" height="200"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <h2>Parking Spots Status</h2>
+        <canvas id="spotsPieChart" width="400" height="200"></canvas>
+    </div>
+
+    <script>
+        // Bar chart for users count
+        const ctxUsers = document.getElementById('usersBarChart').getContext('2d');
+        const usersBarChart = new Chart(ctxUsers, {
+            type: 'bar',
+            data: {
+                labels: ['Users'],
+                datasets: [{
+                    label: 'Total Users',
+                    data: [{{ users_count }}],
+                    backgroundColor: ['#4e73df']
+                }]
+            },
+            options: {
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // Pie chart for parking spots status
+        const ctxSpots = document.getElementById('spotsPieChart').getContext('2d');
+        const spotsPieChart = new Chart(ctxSpots, {
+            type: 'pie',
+            data: {
+                labels: ['Available', 'Occupied'],
+                datasets: [{
+                    data: [{{ available_spots }}, {{ occupied_spots }}],
+                    backgroundColor: ['#1cc88a', '#e74a3b']
+                }]
+            }
+        });
+    </script>
+</body>
+</html>

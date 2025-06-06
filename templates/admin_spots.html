@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Parking Spots</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+<div class="container mt-4">
+  <h3>Parking Spots in: {{ lot.prime_location_name }}</h3>
+  <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary mb-3">← Back to Dashboard</a>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endwith %}
+
+  <table class="table table-bordered table-hover">
+    <thead>
+      <tr>
+        <th>Spot ID</th>
+        <th>Status</th>
+        <th>Reserved By</th>
+       
+      </tr>
+    </thead>
+    <tbody>
+    {% for spot in spots %}
+      <tr>
+        <td>{{ spot.id }}</td>
+        <!-- REPLACE your old <td> for Reserved By with this -->
+<td>
+  {% if spot.status == 'O' %}
+    {% set active_reservation = spot.reservations|selectattr("status", "equalto", "active")|list %}
+    {% if active_reservation %}
+      {% set res = active_reservation[0] %}
+      <strong>{{ res.user.full_name }}</strong><br>
+      <small>{{ res.user.email }}</small><br>
+      <span class="text-muted">From: {{ res.parking_timestamp.strftime('%Y-%m-%d %H:%M') }}</span><br>
+      
+    {% else %}
+      Occupied (No active reservation found)
+    {% endif %}
+  {% else %}
+    -
+  {% endif %}
+</td>
+
+        <td>
+          {% if spot.status == 'A' %}
+          <form method="POST" action="{{ url_for('admin_delete_spot', spot_id=spot.id) }}" style="display:inline;">
+            <button class="btn btn-sm btn-danger" onclick="return confirm('Are you sure to delete this spot?')">Delete</button>
+            <a href="{{ url_for('edit_spot', spot_id=spot.id) }}" class="btn btn-sm btn-info">Edit</a>
+
+          </form>
+          {% else %}
+            <button class="btn btn-sm btn-secondary" disabled>Cannot Delete</button>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

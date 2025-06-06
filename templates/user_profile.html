@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Profile - Parking App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .profile-card {
+      border-radius: 16px;
+      box-shadow: 0 0 24px rgba(0,0,0,0.07);
+      margin: 2rem auto;
+      max-width: 700px;
+      background: #fff;
+      padding: 2rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 2rem;
+    }
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #e9ecef;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: #888;
+      margin-bottom: 1rem;
+    }
+    .profile-info {
+      flex: 1;
+    }
+    .profile-actions .btn {
+      margin-right: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container my-5">
+    <div class="profile-card">
+      <div class="text-center">
+        <div class="profile-avatar">
+          <span class="bi bi-person"></span>
+        </div>
+        <h5>{{ user.username }}</h5>
+        <p class="text-muted mb-2">{{ user.email }}</p>
+        <div class="profile-actions">
+  <a href="{{ url_for('edit_profile') }}" class="btn btn-outline-primary btn-sm">Edit Profile</a>
+  <a href="{{ url_for('logout') }}" class="btn btn-outline-danger btn-sm">Logout</a>
+</div>
+
+      </div>
+      <div class="profile-info">
+        <h6>My Bookings</h6>
+        <ul class="list-group">
+          {% for res in reservations %}
+          <li class="list-group-item">
+            {{ res.spot.lot.prime_location_name }} - 
+            {{ res.parking_timestamp.strftime('%d %b %Y, %I:%M %p') }}
+            {% if res.leaving_timestamp %}
+              - {{ res.leaving_timestamp.strftime('%I:%M %p') }}
+            {% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- Bootstrap Icons CDN (for avatar icon) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+</body>
+</html>

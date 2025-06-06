@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>User Reservation Summary</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f9f9f9;
+    margin: 2rem;
+    color: #333;
+    text-align: center;
+  }
+  h3 {
+    margin-bottom: 1.5rem;
+  }
+  canvas {
+    max-width: 400px;
+    max-height: 400px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 1rem;
+  }
+  a {
+    display: inline-block;
+    margin-top: 2rem;
+    padding: 0.5rem 1.25rem;
+    text-decoration: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+  }
+  a:hover {
+    background-color: #0056b3;
+  }
+</style>
+
+</head>
+<body>
+  <h3>Your Reservation Summary</h3>
+  <canvas id="reservationChart" width="400" height="400"></canvas>
+  <script>
+    const ctx = document.getElementById('reservationChart').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Booked (Active)', 'Released (Completed)'],
+        datasets: [{
+          data: [{{ booked }}, {{ released }}],
+          backgroundColor: ['#007bff', '#28a745'],
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'bottom',
+          }
+        }
+      }
+    });
+  </script>
+  <br/>
+  <a href="{{ url_for('user_dashboard') }}">Back to Dashboard</a>
+</body>
+</html>
